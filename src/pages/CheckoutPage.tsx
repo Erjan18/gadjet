@@ -69,6 +69,13 @@ export default function CheckoutPage() {
     setLoading(false);
   };
 
+  const inputClass = (field: keyof FormData) =>
+    `w-full px-4 py-3 bg-gray-800 border rounded-xl text-white placeholder-gray-600 focus:outline-none focus:ring-1 transition-colors ${
+      errors[field]
+        ? 'border-rose-500 focus:border-rose-500 focus:ring-rose-500/50'
+        : 'border-gray-700 focus:border-cyan-500 focus:ring-cyan-500/50'
+    }`;
+
   if (cart.length === 0 && !success) {
     return (
       <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">
@@ -101,20 +108,6 @@ export default function CheckoutPage() {
     );
   }
 
-  const Field = ({ name, label, type = 'text', placeholder }: { name: keyof FormData; label: string; type?: string; placeholder?: string }) => (
-    <div>
-      <label className="block text-sm font-medium text-gray-300 mb-1.5">{label}</label>
-      <input
-        type={type}
-        value={form[name]}
-        onChange={(e) => setForm((f) => ({ ...f, [name]: e.target.value }))}
-        placeholder={placeholder}
-        className={`w-full px-4 py-3 bg-gray-800 border rounded-xl text-white placeholder-gray-600 focus:outline-none focus:ring-1 transition-colors ${errors[name] ? 'border-rose-500 focus:border-rose-500 focus:ring-rose-500/50' : 'border-gray-700 focus:border-cyan-500 focus:ring-cyan-500/50'}`}
-      />
-      {errors[name] && <p className="text-xs text-rose-500 mt-1">{errors[name]}</p>}
-    </div>
-  );
-
   return (
     <div className="min-h-screen bg-gray-950 text-white">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -128,15 +121,59 @@ export default function CheckoutPage() {
             <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
               <h3 className="text-lg font-bold mb-5">Контактные данные</h3>
               <div className="space-y-4">
-                <Field name="name" label="Имя и фамилия" placeholder="Иван Иванов" />
-                <Field name="email" label="Email" type="email" placeholder="ivan@example.com" />
-                <Field name="phone" label="Телефон" type="tel" placeholder="+996 700 000 000" />
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1.5">Имя и фамилия</label>
+                  <input
+                    type="text"
+                    value={form.name}
+                    onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                    placeholder="Иван Иванов"
+                    className={inputClass('name')}
+                  />
+                  {errors.name && <p className="text-xs text-rose-500 mt-1">{errors.name}</p>}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1.5">Email</label>
+                  <input
+                    type="email"
+                    value={form.email}
+                    onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                    placeholder="ivan@example.com"
+                    className={inputClass('email')}
+                  />
+                  {errors.email && <p className="text-xs text-rose-500 mt-1">{errors.email}</p>}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1.5">Телефон</label>
+                  <input
+                    type="tel"
+                    value={form.phone}
+                    onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
+                    placeholder="+996 700 000 000"
+                    className={inputClass('phone')}
+                  />
+                  {errors.phone && <p className="text-xs text-rose-500 mt-1">{errors.phone}</p>}
+                </div>
               </div>
             </div>
+
             <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
               <h3 className="text-lg font-bold mb-5">Доставка</h3>
               <div className="space-y-4">
-                <Field name="address" label="Адрес доставки" placeholder="г. Бишкек, ул. Примерная, д. 1, кв. 10" />
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1.5">Адрес доставки</label>
+                  <input
+                    type="text"
+                    value={form.address}
+                    onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
+                    placeholder="г. Бишкек, ул. Примерная, д. 1, кв. 10"
+                    className={inputClass('address')}
+                  />
+                  {errors.address && <p className="text-xs text-rose-500 mt-1">{errors.address}</p>}
+                </div>
+
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-1.5">Комментарий к заказу</label>
                   <textarea
@@ -149,6 +186,7 @@ export default function CheckoutPage() {
                 </div>
               </div>
             </div>
+
             <button
               type="submit"
               disabled={loading}
